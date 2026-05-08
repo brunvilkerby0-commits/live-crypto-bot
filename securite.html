@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sécurité - Live Crypto Bot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-navy: #0a192f;
+            --card-blue: #112240;
+            --accent-blue: #0063e5;
+            --text-main: #ccd6f6;
+            --gold: #d4af37;
+            --error: #ff4d4d;
+            --success: #2ecc71;
+        }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-navy);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            color: white;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+            padding-top: 40px;
+        }
+
+        .container { width: 90%; max-width: 400px; }
+
+        .header { text-align: center; margin-bottom: 25px; }
+        .header i { font-size: 50px; color: var(--accent-blue); margin-bottom: 10px; }
+        .header h1 { font-size: 22px; color: var(--gold); margin: 0; text-transform: uppercase; }
+
+        .security-card {
+            background: var(--card-blue);
+            padding: 30px; border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--text-main); }
+
+        .field-wrapper { position: relative; display: flex; align-items: center; }
+        .field-wrapper i { position: absolute; left: 15px; color: var(--accent-blue); }
+
+        .field-wrapper input {
+            width: 100%; background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 14px 14px 14px 45px; border-radius: 12px;
+            color: white; font-size: 15px; outline: none; transition: 0.3s;
+        }
+
+        .field-wrapper input:focus { border-color: var(--accent-blue); }
+
+        .btn-update {
+            width: 100%; padding: 16px; background: var(--accent-blue);
+            color: white; border: none; border-radius: 12px;
+            font-weight: 800; font-size: 16px; cursor: pointer;
+            transition: 0.3s; margin-top: 10px; text-transform: uppercase;
+        }
+
+        .btn-update:active { transform: scale(0.97); }
+
+        #status {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-btn {
+            background: none; border: none; color: var(--text-main);
+            margin-top: 30px; cursor: pointer; font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <i class="fas fa-user-shield"></i>
+        <h1>SÉCURITÉ</h1>
+        <p style="font-size: 12px; opacity: 0.6;">Live Crypto Bot System</p>
+    </div>
+
+    <div class="security-card">
+        <div class="input-group">
+            <label>Ancien mot de passe</label>
+            <div class="field-wrapper">
+                <i class="fas fa-lock-open"></i>
+                <input type="password" id="old-pass" placeholder="Tape ansyen kòd la">
+            </div>
+        </div>
+
+        <hr style="opacity: 0.05; margin: 25px 0;">
+
+        <div class="input-group">
+            <label>Nouveau mot de passe</label>
+            <div class="field-wrapper">
+                <i class="fas fa-key"></i>
+                <input type="password" id="new-pass" placeholder="Minimum 6 karaktè">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Confirmer le nouveau</label>
+            <div class="field-wrapper">
+                <i class="fas fa-check-double"></i>
+                <input type="password" id="confirm-pass" placeholder="Tape nouvo a ankò">
+            </div>
+        </div>
+
+        <button class="btn-update" onclick="handleUpdate()">Mettre à jour</button>
+
+        <div id="status"></div>
+    </div>
+
+    <center>
+        <button class="back-btn" onclick="window.location.href='dashboard.html'">
+            <i class="fas fa-arrow-left"></i> Retour au Dashboard
+        </button>
+    </center>
+</div>
+
+<script>
+    function handleUpdate() {
+        const oldP = document.getElementById('old-pass').value;
+        const newP = document.getElementById('new-pass').value;
+        const confP = document.getElementById('confirm-pass').value;
+        const status = document.getElementById('status');
+        const btn = document.querySelector('.btn-update');
+
+        status.style.display = "none";
+
+        if(!oldP || !newP || !confP) {
+            showMsg("Tanpri ranpli tout bwat yo! ⚠️", "#ff4d4d", "rgba(255, 77, 77, 0.1)");
+            return;
+        }
+
+        if(newP !== confP) {
+            showMsg("Nouveau modpas yo pa parèy! ❌", "#ff4d4d", "rgba(255, 77, 77, 0.1)");
+            return;
+        }
+
+        if(newP.length < 6) {
+            showMsg("Modpas la dwe gen omwen 6 karaktè! 🔑", "#ff4d4d", "rgba(255, 77, 77, 0.1)");
+            return;
+        }
+
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mise à jour...';
+        btn.disabled = true;
+
+        setTimeout(() => {
+            btn.innerHTML = 'Mettre à jour';
+            btn.disabled = false;
+            showMsg("Sécurité mise à jour avec succès! ✅", "#2ecc71", "rgba(46, 204, 113, 0.1)");
+            
+            document.getElementById('old-pass').value = "";
+            document.getElementById('new-pass').value = "";
+            document.getElementById('confirm-pass').value = "";
+        }, 2000);
+    }
+
+    function showMsg(txt, color, bgColor) {
+        const status = document.getElementById('status');
+        status.innerText = txt;
+        status.style.color = color;
+        status.style.backgroundColor = bgColor;
+        status.style.borderLeft = `4px solid ${color}`;
+        status.style.display = "block";
+    }
+</script>
+
+</body>
+</html>
