@@ -53,6 +53,4 @@ app.post('/create_card', async (req, res) => {
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-    console.log(`Sèvè a limen byen pwòp sou pò ${PORT}`);
-});
-
+    console.log(`
