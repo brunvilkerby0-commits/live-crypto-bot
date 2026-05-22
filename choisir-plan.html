@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Live Crypto Bot - Kat Peye</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --gold: #d4af37; --navy: #060e1b; --card-bg: #112240; --white: #ffffff; --red: #e74c3c; --green: #2ecc71; --text: #8892b0; }
+        body { background: var(--navy); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; padding-bottom: 40px; }
+        .container { max-width: 400px; margin: 0 auto; }
+        .header-title { color: var(--gold); text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 20px; text-transform: uppercase; }
+        .card-wrapper { margin-bottom: 25px; }
+        .visa-card { border-radius: 15px; padding: 15px; cursor: pointer; height: 120px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 5px 15px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); position: relative; overflow: hidden; transition: 0.3s; }
+        .visa-card:hover { transform: scale(1.02); }
+        .card-black { background: #1a1a1a; color: white; }
+        .visa-logo { font-size: 22px; font-weight: bold; z-index: 2; }
+        .chip { width: 35px; height: 25px; background: linear-gradient(135deg, #e0c068, #b08d32); border-radius: 4px; z-index: 2; }
+        .plan-info { display: flex; justify-content: space-between; align-items: flex-end; z-index: 2; }
+        .plan-name { font-weight: bold; font-size: 14px; }
+        .plan-price { font-size: 20px; font-weight: 900; }
+        .card-prensip { background: rgba(17, 34, 64, 0.6); border: 1px solid rgba(212, 175, 55, 0.15); border-radius: 0 0 10px 10px; padding: 10px; margin-top: -5px; font-size: 11px; color: #ccd6f6; line-height: 1.4; display: flex; flex-direction: column; gap: 3px; }
+        #form-screen, #amount-screen { display: none; }
+        .input-group { margin-bottom: 12px; }
+        .input-group label { display: block; color: var(--gold); font-size: 11px; margin-bottom: 5px; font-weight: bold; text-transform: uppercase; }
+        .input-group input { width: 100%; background: #112240; border: 1px solid rgba(212, 175, 55, 0.3); padding: 12px; border-radius: 8px; color: white; box-sizing: border-box; font-size: 14px; outline: none; }
+        .kyc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 15px 0; }
+        .kyc-box { background: rgba(255,255,255,0.05); border: 1px dashed var(--gold); padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 10px; }
+        .kyc-box.uploaded { border-style: solid; background: rgba(46, 204, 113, 0.1); border-color: var(--green); color: var(--green); }
+        .btn-action { width: 100%; background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div id="selection-screen" class="container">
+    <h2 class="header-title">Chwazi Kat Ou</h2>
+    <div class="card-wrapper" onclick="openForm()">
+        <div class="visa-card card-black">
+            <div class="visa-logo">VISA</div><div class="chip"></div>
+            <div class="plan-info"><span class="plan-name">STANDARD</span><span class="plan-price">15 USDT</span></div>
+        </div>
+    </div>
+</div>
+
+<div id="form-screen" class="container">
+    <h2 class="header-title">Enfòmasyon Pèsonèl</h2>
+    <div class="input-group"><label>Non</label><input type="text" id="nom"></div>
+    <div class="input-group"><label>Prenon</label><input type="text" id="prenom"></div>
+    <div class="input-group"><label>Nimewo</label><input type="text" id="tel"></div>
+    <div class="input-group"><label>Email</label><input type="email" id="email"></div>
+    <div class="input-group"><label>Adrès</label><input type="text" id="adresse"></div>
+    <div class="input-group"><label>Vil</label><input type="text" id="vil"></div>
+    
+    <label style="color:var(--gold); font-size:11px;">VÉRIFIKASYON PIÈS</label>
+    <div class="kyc-grid">
+        <div class="kyc-box" id="box-devan" onclick="triggerCam('devan')"><i class="fas fa-id-card"></i><span>DEVAN</span></div>
+        <div class="kyc-box" id="box-deyè" onclick="triggerCam('deyè')"><i class="fas fa-id-card"></i><span>DÈYÈ</span></div>
+        <div class="kyc-box" id="box-selfie" onclick="triggerCam('selfie')"><i class="fas fa-user-circle"></i><span>SELFIE</span></div>
+    </div>
+    <button class="btn-action" onclick="finalizeAll()">KONTINYE PEYEMAN</button>
+</div>
+
+<script>
+    // 1. TCHEKE MEMWA
+    if (localStorage.getItem('kycDone') === 'true') {
+        alert("Ou deja verifye kont ou!");
+    }
+
+    function openForm() {
+        document.getElementById('selection-screen').style.display = 'none';
+        document.getElementById('form-screen').style.display = 'block';
+    }
+
+    function triggerCam(m) { /* Fonksyon kamera ou an... */ }
+
+    function finalizeAll() {
+        // Tcheke si tout jaden yo ranpli
+        if(!document.getElementById('nom').value) { alert("Ranpli non an!"); return; }
+        
+        // Isit la ou mete API Bridgecard la
+        localStorage.setItem('kycDone', 'true');
+        alert("Enfòmasyon anrejistre avèk siksè!");
+    }
+</script>
+</body>
+</html>
