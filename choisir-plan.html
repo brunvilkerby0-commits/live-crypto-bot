@@ -1,0 +1,75 @@
+
+
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Live Crypto Bot - Kat Peye</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --gold: #d4af37; --navy: #060e1b; --white: #ffffff; --green: #2ecc71; }
+        body { background: var(--navy); color: white; font-family: sans-serif; margin: 0; padding: 15px; }
+        .container { max-width: 400px; margin: 0 auto; }
+        .header-title { color: var(--gold); text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 20px; text-transform: uppercase; }
+        .visa-card { border-radius: 15px; padding: 15px; cursor: pointer; height: 100px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .card-black { background: #1a1a1a; }
+        .card-gold { background: linear-gradient(135deg, #d4af37 50%, #000 50%); }
+        .card-vip { background: linear-gradient(135deg, #ffffff 50%, #d4af37 50%); color: #000; }
+        .input-group { margin-bottom: 12px; }
+        .input-group label { display: block; color: var(--gold); font-size: 11px; margin-bottom: 5px; font-weight: bold; }
+        .input-group input { width: 100%; background: #112240; border: 1px solid rgba(212, 175, 55, 0.3); padding: 12px; border-radius: 8px; color: white; box-sizing: border-box; }
+        .kyc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 15px 0; }
+        .kyc-box { background: rgba(255,255,255,0.05); border: 1px dashed var(--gold); padding: 10px; border-radius: 8px; text-align: center; font-size: 10px; cursor: pointer; }
+        .btn-action { width: 100%; background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 8px; font-weight: 900; cursor: pointer; margin-top: 10px; }
+        #form-screen { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="selection-screen">
+    <h2 class="header-title">Chwazi Kat Ou</h2>
+    <div class="visa-card card-black" onclick="openForm('STANDARD', 15)"><b>STANDARD</b><br>15 USDT</div>
+    <div class="visa-card card-gold" onclick="openForm('GOLD', 19)"><b>GOLD</b><br>19 USDT</div>
+    <div class="visa-card card-vip" onclick="openForm('VIP', 20)"><b>VIP</b><br>20 USDT</div>
+</div>
+
+<div class="container" id="form-screen">
+    <h2 class="header-title" id="card-title">Enfòmasyon Pèsonèl</h2>
+    <div class="input-group"><label>NON</label><input type="text" id="nom"></div>
+    <div class="input-group"><label>PRENON</label><input type="text" id="prenom"></div>
+    <div class="input-group"><label>NIMEWO</label><input type="tel" id="tel"></div>
+    <div class="input-group"><label>EMAIL</label><input type="email" id="email"></div>
+    <div class="input-group"><label>ADRÈS</label><input type="text" id="adresse"></div>
+    <div class="input-group"><label>VIL</label><input type="text" id="vil"></div>
+    
+    <label style="color:var(--gold); font-size:11px;">VÉRIFIKASYON PIÈS (KYC)</label>
+    <div class="kyc-grid">
+        <div class="kyc-box"><i class="fas fa-id-card"></i><br>DEVAN</div>
+        <div class="kyc-box"><i class="fas fa-id-card"></i><br>DÈYÈ</div>
+        <div class="kyc-box"><i class="fas fa-user-circle"></i><br>SELFIE</div>
+    </div>
+    <button class="btn-action" onclick="submitData()">KONTINYE PEYEMAN</button>
+</div>
+
+<script>
+    function openForm(name, price) {
+        document.getElementById('selection-screen').style.display = 'none';
+        document.getElementById('form-screen').style.display = 'block';
+        document.getElementById('card-title').innerText = name + " - " + price + " USDT";
+    }
+
+    function submitData() {
+        // Isit la nou tcheke si tout jaden yo ranpli
+        const fields = ['nom', 'prenom', 'tel', 'email', 'adresse', 'vil'];
+        for(let field of fields) {
+            if(!document.getElementById(field).value) {
+                alert("Tanpri ranpli tout enfòmasyon yo!");
+                return;
+            }
+        }
+        alert("Enfòmasyon yo anrejistre avèk siksè! Kounye a nou ka konekte ak Bridgecard.");
+    }
+</script>
+</body>
+</html>
