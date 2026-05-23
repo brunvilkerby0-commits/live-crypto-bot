@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Card Bot</title>
+    <style>
+        body { background: #060e1b; color: white; font-family: Arial, sans-serif; padding: 15px; margin: 0; }
+        .container { max-width: 450px; margin: auto; }
+        h2 { text-align: center; color: #d4af37; margin-bottom: 20px; }
+        .card { padding: 20px; border-radius: 15px; margin-bottom: 15px; cursor: pointer; font-weight: bold; border: 1px solid #333; }
+        .std { background: #1a1a1a; }
+        .gold { background: linear-gradient(135deg, #d4af37, #000); }
+        .vip { background: linear-gradient(135deg, #fff, #d4af37); color: #000; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: none; background: #112240; color: white; box-sizing: border-box; }
+        .kyc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 15px 0; }
+        .kyc-box { background: #112240; border: 1px dashed #d4af37; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; font-size: 10px; }
+        button { width: 100%; padding: 14px; border: none; border-radius: 8px; background: #d4af37; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="selection-screen" class="container">
+    <h2>Chwazi Kat Ou</h2>
+    <div class="card std" onclick="openForm('STANDARD', 15)">VISA STANDARD - 15 USDT</div>
+    <div class="card gold" onclick="openForm('GOLD', 19)">VISA GOLD - 19 USDT</div>
+    <div class="card vip" onclick="openForm('VIP', 20)">VISA VIP - 20 USDT</div>
+</div>
+
+<div id="form-screen" class="container hidden">
+    <h2>Enfòmasyon Kliyan</h2>
+    <input type="text" id="nom" placeholder="Non">
+    <input type="text" id="prenom" placeholder="Prenon">
+    <select id="country">
+        <option value="+509">Haiti (+509)</option>
+        <option value="+1">USA (+1)</option>
+    </select>
+    <input type="tel" id="tel" placeholder="Nimewo">
+    <input type="email" id="email" placeholder="Email">
+    <input type="text" id="adresse" placeholder="Adrès">
+    <input type="text" id="vil" placeholder="Vil">
+    
+    <div class="kyc-grid">
+        <div class="kyc-box" onclick="document.getElementById('f1').click()">DEVAN</div>
+        <div class="kyc-box" onclick="document.getElementById('f2').click()">DÈYÈ</div>
+        <div class="kyc-box" onclick="document.getElementById('f3').click()">SELFIE</div>
+    </div>
+    <input type="file" id="f1" class="hidden" accept="image/*" capture="environment">
+    <input type="file" id="f2" class="hidden" accept="image/*" capture="environment">
+    <input type="file" id="f3" class="hidden" accept="image/*" capture="user">
+
+    <button onclick="submitForm()">KONTINYE</button>
+    <button onclick="goBack()" style="background:#555;">Retounen</button>
+</div>
+
+<script>
+    function openForm(card, price) {
+        document.getElementById("selection-screen").style.display = "none";
+        document.getElementById("form-screen").style.display = "block";
+    }
+
+    function goBack() {
+        document.getElementById("form-screen").style.display = "none";
+        document.getElementById("selection-screen").style.display = "block";
+    }
+
+    function submitForm() {
+        // Isit la ou mete lojik API Bridgecard la
+        alert("Enfòmasyon anrejistre, koneksyon API an pwogrè...");
+    }
+</script>
+</body>
+</html>
