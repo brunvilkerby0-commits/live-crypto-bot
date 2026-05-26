@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KYC Vérification</title>
+<style>
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
+    body{ background:#f5f5f5; padding:20px; }
+    /* Layout fikse pou mobil */
+    .container{ width: 100%; max-width:400px; margin:20px auto; background:#fff; padding:20px; border-radius:15px; box-shadow:0 5px 15px rgba(0,0,0,.1); }
+    h2{ text-align:center; margin-bottom:20px; }
+    input{ width:100%; padding:12px; margin-top:10px; border:1px solid #ddd; border-radius:10px; }
+    label{ display:block; margin-top:15px; font-size:14px; font-weight:bold; }
+    button{ width:100%; padding:14px; margin-top:15px; border:none; border-radius:10px; background:#007bff; color:#fff; font-size:16px; cursor:pointer; }
+    .error{ color:red; margin-top:10px; text-align:center; font-weight:bold; }
+    #loader{ display:none; text-align:center; margin-top:20px; }
+    .spinner{ width:50px; height:50px; margin:auto; border:5px solid #ddd; border-top:5px solid #007bff; border-radius:50%; animation:spin 1s linear infinite; }
+    @keyframes spin{ 100%{ transform:rotate(360deg); } }
+    #successBox{ display:none; text-align:center; padding:20px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div id="formBox">
+        <h2>Vérification KYC</h2>
+        <input type="text" id="nom" placeholder="Nom">
+        <input type="text" id="prenom" placeholder="Prénom">
+        <input type="email" id="email" placeholder="Email">
+        <input type="tel" id="numero" placeholder="Numéro">
+        <label>Document (avant)</label><input type="file" id="photo1" accept="image/*">
+        <label>Document (arrière)</label><input type="file" id="photo2" accept="image/*">
+        <label>Selfie</label><input type="file" id="photo3" accept="image/*">
+        <div class="error" id="error"></div>
+        <button id="btnSubmit" onclick="submitKYC()">Confirmer</button>
+        <div id="loader"><div class="spinner"></div><p>Téléchargement...</p></div>
+    </div>
+
+    <div id="successBox">
+        <div style="color:green; font-size:20px;">✅ Dossier envoyé</div>
+        <p>Redirection vers le tableau de bord...</p>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const db = getDatabase(initializeApp({ databaseURL: "https://live-crypto-bot-default-rtdb.firebaseio.com" }));
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+
+    window.submitKYC = async () => {
+        const nom = document.getElementById("nom").value;
+        const prenom = document.getElementById("prenom").value;
+        const email = document.getElementById("email").value;
+        const numero = document.getElementById("numero").value;
+        const p1 = document.getElementById("photo1").files[0];
+        const p2 = document.getElementById("photo2").files[0];
+        const p3 = document.getElementById("photo3").files[0];
+
+        if(!nom || !prenom || !p1 || !p2 || !p3) return alert("Veuillez remplir tous les champs et ajouter les 3 photos.");
+
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("btnSubmit").disabled = true;
+
+        try {
+            const userId = Date.now();
+            
+            const img1 = await toBase64(p1);
+            const img2 = await toBase64(p2);
+            const img3 = await toBase64(p3);
+
+            await set(ref(db, 'users/' + userId), { 
+                nom, prenom, email, numero, status: "An atant",
+                photo1: img1, photo2: img2, photo3: img3 
+            });
+
+            const botToken = "8650927753:AAENrCiVGi4m89bDj7fVz15Ax7nDUVnEYlc";
+            const chatId = "-1003948852501";
+            
+            // Mesaj ak ID ki klè
+            const text = `👤 *NOUVO KYC AN ATANT*\n🆔 *ID:* ${userId}\n👤 *Kliyan:* ${prenom} ${nom}\n📞 *Tel:* ${numero}\nStatus: En attente de validation.`;
+            
+            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: text,
+                    parse_mode: 'Markdown',
+                    reply_markup: {
+                        inline_keyboard: [[
+                            { text: "✅ VALIDE", callback_data: `verify_${userId}` },
+                            { text: "❌ REJETE", callback_data: `reject_${userId}` }
+                        ]]
+                    }
+                })
+            });
+
+            document.getElementById("formBox").style.display = "none";
+            document.getElementById("successBox").style.display = "block";
+
+            // Redireksyon otomatik
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 2000);
+
+        } catch (e) {
+            alert("Erreur de connexion.");
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("btnSubmit").disabled = false;
+        }
+    };
+</script>
+</body>
+</html>
